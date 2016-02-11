@@ -2,6 +2,7 @@
 %% -*- erlang -*-
 %%! -smp enable -sname factorial -mnesia debug verbose
 main([String]) ->
+    io:format("String = ~p~n", [String]),
     try
         Out = input (String, []),
         io:format("Outstring = ~w\n", [Out])
@@ -13,20 +14,25 @@ main(_) ->
     usage().
 
 usage() ->
-    io:format("usage: factorial integer\n"),
+    io:format("usage: give me a  string!\n"),
     halt(1).
 
 %%% Key = 'aaaaabbbbbabbbaabbababbaaababaab'.
 %%% Alphabet = 'abcdefghijklmnopqrstuvwxyz'.
 
 input ([], Acc) -> 
+    io:format("Acc = ~p~n", [Acc]),
     lists:reverse(Acc);
 input ([H|Tail], Acc) ->
     if H >= 65 andalso H =< 90 ->
+            io:format("H1 = ~p~n", [H]),
             [98|Acc];
        H >= 97 andalso H =< 122 -> 
+            io:format("H2 = ~p~n", [H]),
             [97|Acc];
        H == 32 -> 
+            io:format("H3 = ~p~n", [H]),
             [Acc]
     end,
+    io:format("Acc1 = ~p~n", [Acc]),
     input (Tail, Acc).
