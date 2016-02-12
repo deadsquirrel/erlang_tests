@@ -1,0 +1,35 @@
+#!/usr/bin/env escript
+%% -*- erlang -*-
+%%! -smp enable -sname factorial -mnesia debug verbose
+main([String]) ->
+    try
+        input (String, [])
+    catch
+        _:_ ->
+            usage()
+main(_) ->
+    usage().
+
+usage() ->
+    io:format("usage: factorial integer\n"),
+    halt(1).
+
+%%% Key = 'aaaaabbbbbabbbaabbababbaaababaab'.
+%%% Alphabet = 'abcdefghijklmnopqrstuvwxyz'.
+
+
+
+
+
+
+input ([], Acc) -> 
+    lists:reverse(Acc);
+input ([H|Tail], Acc) ->
+    if H >= 65 andalso H =< 90 ->
+            [98|Acc];
+       H >= 97 andalso H =< 122 -> 
+            [97|Acc];
+       H == 32 -> 
+            [Acc]
+    end,
+    input (Tail, Acc).
