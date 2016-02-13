@@ -30,7 +30,7 @@ input ([H|Tail], Acc) ->
            H >= 97 andalso H =< 122 -> 
                 [97|Acc];
            H == 32 -> 
-                [Acc];
+                Acc;
            true -> {error,not_a_leter}
         end,
     input (Tail, Asd).
