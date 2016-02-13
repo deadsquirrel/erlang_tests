@@ -24,15 +24,13 @@ input ([], Acc) ->
     io:format("Acc = ~p~n", [Acc]),
     lists:reverse(Acc);
 input ([H|Tail], Acc) ->
-    if H >= 65 andalso H =< 90 ->
-            io:format("H1 = ~p~n", [H]),
-            [98|Acc];
-       H >= 97 andalso H =< 122 -> 
-            io:format("H2 = ~p~n", [H]),
-            [97|Acc];
-       H == 32 -> 
-            io:format("H3 = ~p~n", [H]),
-            [Acc]
-    end,
-    io:format("Acc1 = ~p~n", [Acc]),
-    input (Tail, Acc).
+    Asd =
+        if H >= 65 andalso H =< 90 ->
+                [98|Acc];
+           H >= 97 andalso H =< 122 -> 
+                [97|Acc];
+           H == 32 -> 
+                [Acc];
+           true -> {error,not_a_leter}
+        end,
+    input (Tail, Asd).
