@@ -5,14 +5,16 @@ main([String]) ->
     Key = 'aaaaabbbbbabbbaabbababbaaababaab',
     Alphabet = 'abcdefghijklmnopqrstuvwxyz',
     io:format("String = ~p~n", [String]),
-    io:format("Key = ~p~n", [Key]),
-    io:format("Alphabet = ~p~n", [Alphabet]),
     try
-        KA = key_alp(Key, Alphabet, []),
+        io:format("1~n", []),
+        KA = create_proplist(Key, Alphabet, []),
+        io:format("2~n", []),
         io:format("KA = ~w\n", [KA]),
         Out = input (String, []),
+        io:format("3~n", []),
         io:format("Outstring = ~w\n", [Out]),
-        create_word(Out, [])
+        create_word(Out, []),
+        io:format("4~n", [])
     catch
         _:_ ->
             usage()
@@ -48,12 +50,14 @@ create_word([H1,H2,H3,H4,H5|Tail], Acc) ->
     create_word(Tail, Acc).
 
 
-key_alp([], [], Res) -> Res;
-key_alp([H1,H2,H3,H4,H5|TKey], [Ha|TAlphabet], Res) ->
+create_proplist([], [], Res) -> Res;
+create_proplist([H1,H2,H3,H4,H5|TKey], [Ha|TAlphabet], Res) ->
+    io:format("Key = ~p,~p,~p,~p,~p,~p ~n", [H1,H2,H3,H4,H5,TKey]),
+    io:format("Alphabet = ~p,~p~n", [Ha,TAlphabet]),
     Result = [{[H1,H2,H3,H4,H5], Ha}|Res],
     io:format("Result= ~p~n", [Result]),
     T = [H2,H3,H4,H5|TKey],
-    key_alp(T, TAlphabet, Result).
+    create_proplist(T, TAlphabet, Result).
 
     
     
