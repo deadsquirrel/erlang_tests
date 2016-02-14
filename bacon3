@@ -5,7 +5,8 @@ main([String]) ->
     io:format("String = ~p~n", [String]),
     try
         Out = input (String, []),
-        io:format("Outstring = ~w\n", [Out])
+        io:format("Outstring = ~w\n", [Out]),
+        create_word(Out, [])
     catch
         _:_ ->
             usage()
@@ -34,3 +35,11 @@ input ([H|Tail], Acc) ->
            true -> {error,not_a_leter}
         end,
     input (Tail, Asd).
+
+
+create_word([], Acc) -> Acc;
+create_word([H1,H2,H3,H4,H5|Tail], Acc) ->
+    io:format("word =  ~p, ~p, ~p, ~p, ~p~n", [H1, H2, H3, H4, H5]),
+    Word = [H1,H2,H3,H4,H5],
+        io:format("! ~p~n", [Word]),
+    create_word(Tail, Acc).
