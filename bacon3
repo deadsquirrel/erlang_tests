@@ -2,8 +2,14 @@
 %% -*- erlang -*-
 %%! -smp enable -sname factorial -mnesia debug verbose
 main([String]) ->
+    Key = 'aaaaabbbbbabbbaabbababbaaababaab',
+    Alphabet = 'abcdefghijklmnopqrstuvwxyz',
     io:format("String = ~p~n", [String]),
+    io:format("Key = ~p~n", [Key]),
+    io:format("Alphabet = ~p~n", [Alphabet]),
     try
+        KA = key_alp(Key, Alphabet, []),
+        io:format("KA = ~w\n", [KA]),
         Out = input (String, []),
         io:format("Outstring = ~w\n", [Out]),
         create_word(Out, [])
@@ -17,9 +23,6 @@ main(_) ->
 usage() ->
     io:format("usage: give me a  string!\n"),
     halt(1).
-
-%%% Key = 'aaaaabbbbbabbbaabbababbaaababaab'.
-%%% Alphabet = 'abcdefghijklmnopqrstuvwxyz'.
 
 input ([], Acc) -> 
     io:format("Acc = ~p~n", [Acc]),
@@ -41,5 +44,16 @@ create_word([], Acc) -> Acc;
 create_word([H1,H2,H3,H4,H5|Tail], Acc) ->
     io:format("word =  ~p, ~p, ~p, ~p, ~p~n", [H1, H2, H3, H4, H5]),
     Word = [H1,H2,H3,H4,H5],
-        io:format("! ~p~n", [Word]),
+    io:format("! ~p~n", [Word]),
     create_word(Tail, Acc).
+
+
+key_alp([], [], Res) -> Res;
+key_alp([H1,H2,H3,H4,H5|TKey], [Ha|TAlphabet], Res) ->
+    Result = [{[H1,H2,H3,H4,H5], Ha}|Res],
+    io:format("Result= ~p~n", [Result]),
+    T = [H2,H3,H4,H5|TKey],
+    key_alp(T, TAlphabet, Result).
+
+    
+    
