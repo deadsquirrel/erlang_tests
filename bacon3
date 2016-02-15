@@ -7,6 +7,8 @@ main([String]) ->
     io:format("String = ~p~n", [String]),
     try
         io:format("1~n", []),
+%% формируем проплист из строки ключей и латинского алфавита.
+%% получаем лист туплей типа {[97,97,97,97,97], 97}
         KA = create_proplist(Key, Key, Alphabet, [], [], 0),
         io:format("2~n", []),
         io:format("KA = ~w\n", [KA]),
@@ -58,12 +60,15 @@ create_word([_|[]], Acc, _) ->
 create_word([H|Tail], Acc, 4) ->
     Word = [H|Acc],
     io:format("word ~p~n", [Word]),
-    create_word(Tail, Acc, 0);
+% вызываем новую функцию проверки по проплисту word  и віписіваем нужную букву в новій лист
+% 
+
+    create_word(Tail, [], 0);
 create_word([H|Tail], Acc, C) ->
     io:format("lit =  ~p, Acc =  ~p~n", [H, Acc]),
-    Lit = [H|Acc],
-    io:format("! ~p~n", [Lit]),
-    create_word(Tail, Acc, C+1).
+    Word = [H|Acc],
+    io:format("! ~p~n", [Word]),
+    create_word(Tail, Word, C+1).
 
 
 
