@@ -15,7 +15,7 @@ main([String]) ->
         Out = input (String, []),
         io:format("3~n", []),
         io:format("Outstring = ~w\n", [Out]),
-        create_word(Out, [], 0),
+        create_word(Out, [], 0, KA),
         io:format("4~n", [])
     catch
         T:E ->
@@ -45,30 +45,23 @@ input ([H|Tail], Acc) ->
         end,
     input (Tail, Asd).
 
-% отследить с Б5 знаков вывод из рекурсии
-%%create_word([], Acc) -> Acc;
-%%create_word([H1,H2,H3,H4,H5|Tail], Acc) ->
-%%    io:format("word =  ~p, ~p, ~p, ~p, ~p~n", [H1, H2, H3, H4, H5]),
-%%    Word = [H1,H2,H3,H4,H5],
-%%    io:format("! ~p~n", [Word]),
-%%    create_word(Tail, Acc).
 
 %%create_word([], Out, Acc, _C) ->     lists:reverse(Acc);
-create_word([_|[]], Acc, _) -> 
+create_word([_|[]], Acc, _, _KA) -> 
     Word = Acc,
-    io:format("word ~p~n", [Word]);
-create_word([H|Tail], Acc, 4) ->
+    io:format("Wword ~p~n", [Word]);
+create_word([H|Tail], Acc, 4, KA) ->
     Word = [H|Acc],
-    io:format("word ~p~n", [Word]),
+    io:format("WWword ~p~n", [Word]),
 % вызываем новую функцию проверки по проплисту word  и віписіваем нужную букву в новій лист
 % 
-
-    create_word(Tail, [], 0);
-create_word([H|Tail], Acc, C) ->
+    decoder(KA, Word, []),
+    create_word(Tail, [], 0, KA);
+create_word([H|Tail], Acc, C, _KA) ->
     io:format("lit =  ~p, Acc =  ~p~n", [H, Acc]),
     Word = [H|Acc],
     io:format("! ~p~n", [Word]),
-    create_word(Tail, Word, C+1).
+    create_word(Tail, Word, C+1, _KA).
 
 
 
@@ -77,16 +70,29 @@ create_word([H|Tail], Acc, C) ->
 
 create_proplist(_, _, [], Res, _List, _Count) -> lists:reverse(Res);
 create_proplist([H1|_TKey], [_H|TailKey], [Ha|TAlphabet], Res, List1, 4) ->
-    io:format("Alphabet = ~p,~p~n", [Ha,TAlphabet]),
+%%%    io:format("Alphabet = ~p,~p~n", [Ha,TAlphabet]),
     List2 = [H1|List1],
     Result = [{lists:reverse(List2), Ha}|Res],
-    io:format("Result = ~p~n", [Result]),
+%%    io:format("Result = ~p~n", [Result]),
     create_proplist(TailKey, TailKey, TAlphabet, Result, [], 0);
 create_proplist([H1|TKey], Key, Alphabet, Res, List1, Count) ->
-    io:format("H1 = ~p, List1 = ~p~n", [H1,List1]),
+%%%    io:format("H1 = ~p, List1 = ~p~n", [H1,List1]),
     List2 = [H1|List1],
     create_proplist(TKey, Key, Alphabet, Res, List2, Count+1).
 
 
-
-  
+decoder([], _Word, Out_sent) -> 
+    io:format("6~n", []),
+    io:format("Out_sent = ~p~n", [Out_sent]),
+    Out_sent;
+decoder([{N,Head}|Tail_KA], Word, Out_sent) ->
+    io:format("5~n", []),
+    io:format("N = ~p~n", [N]),
+    io:format("Word = ~p~n", [Word]),
+    if N == Word -> 
+            Out_sent = [Head|Out_sent];
+       true -> 
+            decoder(Tail_KA, Word, Out_sent)
+    end.
+%%decoder(KA, Word, Out_sent) ->
+%%    decoder(KA, Word, Out_sent).
