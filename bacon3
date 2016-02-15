@@ -2,21 +2,23 @@
 %% -*- erlang -*-
 %%! -smp enable -sname factorial -mnesia debug verbose
 main([String]) ->
-    Key = 'aaaaabbbbbabbbaabbababbaaababaab',
-    Alphabet = 'abcdefghijklmnopqrstuvwxyz',
+    Key = "aaaaabbbbbabbbaabbababbaaababaab",
+    Alphabet = "abcdefghijklmnopqrstuvwxyz",
     io:format("String = ~p~n", [String]),
     try
         io:format("1~n", []),
-        KA = create_proplist(Key, Alphabet, []),
+        KA = create_proplist(Key, Key, Alphabet, [], [], 0),
         io:format("2~n", []),
         io:format("KA = ~w\n", [KA]),
         Out = input (String, []),
         io:format("3~n", []),
         io:format("Outstring = ~w\n", [Out]),
-        create_word(Out, []),
+        create_word(Out, Out, [], 0),
         io:format("4~n", [])
     catch
-        _:_ ->
+        T:E ->
+            io:format("Type: ~p, Exception: ~p~nStacktrace:~p~n",
+                      [T, E, erlang:get_stacktrace()]),
             usage()
     end;
 main(_) ->
@@ -41,23 +43,39 @@ input ([H|Tail], Acc) ->
         end,
     input (Tail, Asd).
 
+% отследить с Б5 знаков вывод из рекурсии
+%%create_word([], Acc) -> Acc;
+%%create_word([H1,H2,H3,H4,H5|Tail], Acc) ->
+%%    io:format("word =  ~p, ~p, ~p, ~p, ~p~n", [H1, H2, H3, H4, H5]),
+%%    Word = [H1,H2,H3,H4,H5],
+%%    io:format("! ~p~n", [Word]),
+%%    create_word(Tail, Acc).
 
-create_word([], Acc) -> Acc;
-create_word([H1,H2,H3,H4,H5|Tail], Acc) ->
+create_word([], Out, Acc, _C) -> Acc;
+create_word([H|Tail], Out, Acc, 4) ->
+create_word([H|Tail], Out, Acc, C) ->
     io:format("word =  ~p, ~p, ~p, ~p, ~p~n", [H1, H2, H3, H4, H5]),
     Word = [H1,H2,H3,H4,H5],
     io:format("! ~p~n", [Word]),
-    create_word(Tail, Acc).
+    create_word(Tail, Out, Acc, C+1).
 
 
-create_proplist([], [], Res) -> Res;
-create_proplist([H1,H2,H3,H4,H5|TKey], [Ha|TAlphabet], Res) ->
-    io:format("Key = ~p,~p,~p,~p,~p,~p ~n", [H1,H2,H3,H4,H5,TKey]),
+
+
+
+
+create_proplist(_, _, [], Res, _List, _Count) -> lists:reverse(Res);
+create_proplist([H1|_TKey], [_H|TailKey], [Ha|TAlphabet], Res, List1, 4) ->
     io:format("Alphabet = ~p,~p~n", [Ha,TAlphabet]),
-    Result = [{[H1,H2,H3,H4,H5], Ha}|Res],
-    io:format("Result= ~p~n", [Result]),
-    T = [H2,H3,H4,H5|TKey],
-    create_proplist(T, TAlphabet, Result).
+    List2 = [H1|List1],
+    Result = [{lists:reverse(List2), Ha}|Res],
+    io:format("Result = ~p~n", [Result]),
+    create_proplist(TailKey, TailKey, TAlphabet, Result, [], 0);
+create_proplist([H1|TKey], Key, Alphabet, Res, List1, Count) ->
+    io:format("H1 = ~p, List1 = ~p~n", [H1,List1]),
+    List2 = [H1|List1],
+    create_proplist(TKey, Key, Alphabet, Res, List2, Count+1).
 
-    
-    
+
+
+  
