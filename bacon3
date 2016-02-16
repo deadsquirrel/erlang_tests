@@ -55,7 +55,8 @@ create_word([H|Tail], Acc, 4, KA, Dec) ->
     io:format("WWword ~p~n", [Word]),
 % вызываем новую функцию проверки по проплисту word  и віписіваем нужную букву в новій лист
 %% не найдено соответствие, проверить 
-    Decod = [decoder(KA, Word, [])|Dec],
+    Rev_Word = lists:reverse(Word),
+    Decod = [decoder(KA, Rev_Word, [])|Dec],
     io:format("Decoder ~p~n", [Decod]),
     create_word(Tail, [], 0, KA, Decod);
 create_word([H|Tail], Acc, C, _KA, Dec) ->
@@ -92,6 +93,7 @@ decoder([{N,Head}|Tail_KA], Word, Out_sent) ->
     io:format("Word = ~p~n", [Word]),
     if N == Word -> 
             io:format("7~n", []),
+            io:format("~p == ~p~n", [N, Word]),
             OutLitera = Head;
        true -> 
             decoder(Tail_KA, Word, Out_sent)
