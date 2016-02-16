@@ -15,7 +15,7 @@ main([String]) ->
         Out = input (String, []),
         io:format("3~n", []),
         io:format("Outstring = ~w\n", [Out]),
-        create_word(Out, [], 0, KA),
+        create_word(Out, [], 0, KA, []),
         io:format("4~n", [])
     catch
         T:E ->
@@ -47,21 +47,22 @@ input ([H|Tail], Acc) ->
 
 
 %%create_word([], Out, Acc, _C) ->     lists:reverse(Acc);
-create_word([_|[]], Acc, _, _KA) -> 
-    Word = Acc,
-    io:format("Wword ~p~n", [Word]);
-create_word([H|Tail], Acc, 4, KA) ->
+create_word([], Acc, _, _KA, Dec) -> 
+    Out = lists:reverse(Dec),
+    io:format("Out_word ~p~n", [Out]);
+create_word([H|Tail], Acc, 4, KA, Dec) ->
     Word = [H|Acc],
     io:format("WWword ~p~n", [Word]),
 % вызываем новую функцию проверки по проплисту word  и віписіваем нужную букву в новій лист
-% 
-    decoder(KA, Word, []),
-    create_word(Tail, [], 0, KA);
-create_word([H|Tail], Acc, C, _KA) ->
-    io:format("lit =  ~p, Acc =  ~p~n", [H, Acc]),
+%% не найдено соответствие, проверить 
+    Decod = [decoder(KA, Word, [])|Dec],
+    io:format("Decoder ~p~n", [Decod]),
+    create_word(Tail, [], 0, KA, Decod);
+create_word([H|Tail], Acc, C, _KA, Dec) ->
+    io:format("lit =  ~p, 5lit =  ~p~n", [H, Acc]),
     Word = [H|Acc],
     io:format("! ~p~n", [Word]),
-    create_word(Tail, Word, C+1, _KA).
+    create_word(Tail, Word, C+1, _KA, Dec).
 
 
 
@@ -90,9 +91,8 @@ decoder([{N,Head}|Tail_KA], Word, Out_sent) ->
     io:format("N = ~p~n", [N]),
     io:format("Word = ~p~n", [Word]),
     if N == Word -> 
-            Out_sent = [Head|Out_sent];
+            io:format("7~n", []),
+            OutLitera = Head;
        true -> 
             decoder(Tail_KA, Word, Out_sent)
     end.
-%%decoder(KA, Word, Out_sent) ->
-%%    decoder(KA, Word, Out_sent).
